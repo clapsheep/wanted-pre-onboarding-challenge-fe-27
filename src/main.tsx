@@ -1,14 +1,8 @@
+import "@/styles/index.css";
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import "./index.css";
-import { RouterProvider, createBrowserRouter } from "react-router-dom";
-import Home from "@/pages/Home";
-import Login from "@/pages/Login";
-
-const router = createBrowserRouter([
-  { path: "/", element: <Home /> },
-  { path: "/auth", element: <Login /> },
-]);
+import { RouterProvider } from "react-router-dom";
+import router from "@/routes/router";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>

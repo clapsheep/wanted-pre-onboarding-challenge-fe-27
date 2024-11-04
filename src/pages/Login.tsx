@@ -1,4 +1,5 @@
 import InputText from "@/components/InputText";
+import { Link } from "react-router-dom";
 
 const Login = () => {
   const onSubmit = (e: React.FormEvent) => {
@@ -11,7 +12,7 @@ const Login = () => {
         <InputText id="password">비밀번호</InputText>
         <button type="submit">로그인</button>
       </form>
-      <a href="/regist">회원가입</a>
+      <Link to="/auth/login">회원가입</Link>
     </>
   );
 };
