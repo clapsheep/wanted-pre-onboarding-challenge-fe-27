@@ -1,10 +1,16 @@
 import Header from "@/components/Header";
-import { Outlet } from "react-router-dom";
+import { Outlet, useLoaderData } from "react-router-dom";
+
+interface LoaderData {
+  isLoggedIn: boolean;
+}
 
 const RootLayout = () => {
+  const { isLoggedIn } = useLoaderData() as LoaderData;
+
   return (
     <>
-      <Header />
+      <Header isLoggedIn={isLoggedIn} />
       <Outlet />
     </>
   );
