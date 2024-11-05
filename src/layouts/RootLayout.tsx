@@ -1,16 +1,13 @@
 import Header from "@/components/Header";
-import { Outlet, useLoaderData } from "react-router-dom";
-
-interface LoaderData {
-  isLoggedIn: boolean;
-}
+import { useAuth } from "@/contexts/AuthContext";
+import { Outlet } from "react-router-dom";
 
 const RootLayout = () => {
-  const { isLoggedIn } = useLoaderData() as LoaderData;
+  const { isAuthenticated } = useAuth();
 
   return (
     <>
-      <Header isLoggedIn={isLoggedIn} />
+      <Header isLoggedIn={isAuthenticated} />
       <Outlet />
     </>
   );

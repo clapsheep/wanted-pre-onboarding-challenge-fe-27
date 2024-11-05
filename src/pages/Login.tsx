@@ -1,7 +1,26 @@
 import InputText from "@/components/InputText";
-import { Form, Link } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
+import { useEffect } from "react";
+import { Form, Link, useActionData, useNavigate } from "react-router-dom";
+import BasicButton from "@/components/BasicButton";
 
 const Login = () => {
+  const { login } = useAuth();
+  const navigate = useNavigate();
+  const actionData = useActionData() as {
+    success: boolean;
+    userInfo: { token: string; email: string };
+  };
+
+  useEffect(() => {
+    if (actionData?.success) {
+      login(actionData.userInfo.token, actionData.userInfo.email);
+      navigate("/");
+    } else if (actionData && !actionData.success) {
+      alert("아이디나 비밀번호를 확인해주세요.");
+    }
+  }, [actionData]);
+
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-md w-full space-y-8 bg-white p-8 rounded-lg shadow-lg">
@@ -53,12 +72,9 @@ const Login = () => {
           </div>
 
           <div>
-            <button
-              type="submit"
-              className="w-full flex justify-center py-3 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
-            >
+            <BasicButton type="submit" className="w-full">
               로그인
-            </button>
+            </BasicButton>
           </div>
 
           <div className="text-center">

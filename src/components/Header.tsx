@@ -1,11 +1,15 @@
-import { Link, useNavigate } from "react-router-dom";
+import BasicButton from "@/components/BasicButton";
+import { useAuth } from "@/contexts/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
+  console.log(isLoggedIn);
+
   const navigate = useNavigate();
+  const { logout } = useAuth();
 
   const handleLogout = () => {
-    localStorage.removeItem("token");
-
+    logout();
     navigate("/");
   };
 
@@ -14,36 +18,24 @@ function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
       <nav className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
-            <Link
-              to="/"
-              className="text-gray-800 hover:text-blue-600 font-bold text-xl"
-            >
+            <BasicButton to="/" color="primary">
               홈
-            </Link>
+            </BasicButton>
           </div>
 
           <div className="flex items-center gap-6">
             {isLoggedIn ? (
-              <button
-                onClick={handleLogout}
-                className="text-gray-600 hover:text-blue-600 font-medium"
-              >
+              <BasicButton onClick={handleLogout} color="secondary">
                 로그아웃
-              </button>
+              </BasicButton>
             ) : (
               <>
-                <Link
-                  to="/auth/login"
-                  className="text-gray-600 hover:text-blue-600 font-medium"
-                >
+                <BasicButton to="/auth/login" color="secondary">
                   로그인
-                </Link>
-                <Link
-                  to="/auth/regist"
-                  className="bg-blue-500 text-white px-4 py-2 rounded-md hover:bg-blue-600 transition-colors"
-                >
+                </BasicButton>
+                <BasicButton to="/auth/regist" color="primary">
                   회원가입
-                </Link>
+                </BasicButton>
               </>
             )}
           </div>

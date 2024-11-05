@@ -3,6 +3,7 @@ interface T {
   type?: string;
   children: React.ReactNode;
   autoComplete?: string;
+  placeholder?: string;
   value?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
@@ -12,6 +13,7 @@ const InputText = ({
   type = "text",
   children,
   autoComplete,
+  placeholder,
   value,
   onChange,
 }: T) => {
@@ -25,6 +27,7 @@ const InputText = ({
         type={type}
         name={id}
         id={id}
+        placeholder={placeholder}
         autoComplete={autoComplete}
         value={value}
         onChange={onChange}

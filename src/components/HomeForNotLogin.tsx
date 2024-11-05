@@ -1,4 +1,4 @@
-import { Link } from "react-router-dom";
+import BasicButton from "@/components/BasicButton";
 
 function HomeForNotLogin() {
   return (
@@ -24,18 +24,12 @@ function HomeForNotLogin() {
       </div>
 
       <div className="flex justify-center gap-4">
-        <Link
-          to="/auth/login"
-          className="bg-blue-500 text-white px-6 py-2 rounded-md hover:bg-blue-600 transition-colors"
-        >
+        <BasicButton to="/auth/login" color="primary">
           로그인하기
-        </Link>
-        <Link
-          to="/auth/regist"
-          className="bg-green-500 text-white px-6 py-2 rounded-md hover:bg-green-600 transition-colors"
-        >
+        </BasicButton>
+        <BasicButton to="/auth/regist" color="secondary">
           회원가입하기
-        </Link>
+        </BasicButton>
       </div>
     </div>
   );
