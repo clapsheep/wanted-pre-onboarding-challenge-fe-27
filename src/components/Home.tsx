@@ -1,7 +1,14 @@
 import { TodoType } from "@/components/TodoList";
-import { TodoModal, TodoList, TodoDetail, BasicButton } from "@/components";
+import {
+  TodoModal,
+  TodoList,
+  TodoDetail,
+  BasicButton,
+  NoContent,
+} from "@/components";
 import { useEffect, useState } from "react";
 import { useActionData, useLoaderData } from "react-router-dom";
+import { getTodoDetail } from "@/routes/actions";
 
 const Home = () => {
   const { data: todos } = useLoaderData() as { data: TodoType[] };
@@ -13,6 +20,8 @@ const Home = () => {
   const [selectedPost, setSelectedPost] = useState<TodoType | undefined>(
     undefined
   );
+  const [todoDetail, setTodoDetail] = useState<TodoType | undefined>(undefined);
+
   useEffect(() => {
     if (actionData?.success) {
       setIsModalOpen(false);
@@ -55,34 +64,31 @@ const Home = () => {
     setSelectedPost(todo);
   };
 
+  useEffect(() => {
+    if (selectedPost) {
+      (async () => {
+        const { data } = await getTodoDetail(selectedPost);
+        setTodoDetail(data);
+      })();
+    }
+    console.log(todoDetail);
+  }, [selectedPost]);
+
   if (todos.length === 0) {
     return (
-      <div className="container mx-auto p-4">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold">TO-DO 목록</h1>
-          <BasicButton
-            color="primary"
-            onClick={() => {
-              setEditingPost(undefined);
-              setIsModalOpen(true);
-            }}
-          >
-            새 할 일
-          </BasicButton>
-        </div>
-        <div className="text-center py-10 text-gray-500">
-          게시글이 없습니다. 첫 번째 할 일을 작성해보세요!
-        </div>
-        <TodoModal
-          isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingPost(undefined);
-          }}
-          onSubmit={handleSubmit}
-          initialData={editingPost}
-        />
-      </div>
+      <NoContent
+        modalState={isModalOpen}
+        onClick={() => {
+          setEditingPost(undefined);
+          setIsModalOpen(true);
+        }}
+        onClose={() => {
+          setIsModalOpen(false);
+          setEditingPost(undefined);
+        }}
+        onSubmit={handleSubmit}
+        initialData={editingPost}
+      />
     );
   }
 
@@ -116,7 +122,7 @@ const Home = () => {
         </div>
         <div className="w-1/2 border-l pl-6">
           <TodoDetail
-            todo={selectedPost}
+            todo={todoDetail}
             onEdit={handleEdit}
             onDelete={handleDelete}
           />

@@ -22,9 +22,9 @@ const TodoList = ({
   selectedPostId,
 }: TodoListProps) => {
   return (
-    <div className="space-y-4">
+    <ul className="space-y-4">
       {todos.map((post) => (
-        <div
+        <li
           key={post.id}
           className={`p-4 border rounded-lg cursor-pointer hover:border-blue-500 transition-colors ${
             selectedPostId === post.id ? "border-blue-500 bg-blue-50" : ""
@@ -36,9 +36,9 @@ const TodoList = ({
           <div className="mt-2 text-sm text-gray-500">
             {new Date(post.createdAt).toLocaleDateString()}
           </div>
-        </div>
+        </li>
       ))}
-    </div>
+    </ul>
   );
 };
 

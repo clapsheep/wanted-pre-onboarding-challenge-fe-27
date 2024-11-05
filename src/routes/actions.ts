@@ -1,3 +1,4 @@
+import { TodoType } from "@/components/TodoList";
 import getAuth from "@/utils/getAuth";
 
 const { VITE_API_URI } = import.meta.env;
@@ -139,4 +140,19 @@ export const createTodosAction = async ({ request }: { request: Request }) => {
     console.error("createTodos error:", error);
     return { data: [], error: "할 일 생성에 오류가 발생했습니다." };
   }
+};
+
+export const getTodoDetail = async (selectedPost: TodoType) => {
+  const { token } = getAuth();
+  const res = await fetch(`${VITE_API_URI}/todos/${selectedPost.id}`, {
+    method: "GET",
+    headers: token
+      ? {
+          Authorization: token,
+          "Content-Type": "application/json",
+        }
+      : undefined,
+  });
+  const data = await res.json();
+  return data;
 };

@@ -7,3 +7,4 @@ export { default as TodoDetail } from "./TodoDetail";
 export { default as InputText } from "./InputText";
 export { default as HomeForNotLogin } from "./HomeForNotLogin";
 export { default as Home } from "./Home";
+export { default as NoContent } from "./NoContent";
