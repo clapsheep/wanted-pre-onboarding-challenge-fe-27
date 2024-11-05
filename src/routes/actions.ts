@@ -8,7 +8,6 @@ export const registAction = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const email = formData.get("email");
   const password = formData.get("password");
-  console.log(email, password);
 
   try {
     const response = await fetch(`${VITE_API_URI}/users/create`, {
@@ -88,29 +87,46 @@ export const getTodoListAction = async () => {
     return { data: [], error: "할 일 목록을 불러오는 중 오류가 발생했습니다." };
   }
 };
-// get Todo 비즈니스 로직
-export const getTodoAction = async (id: string) => {
-  console.log(id);
+// // get Todo 비즈니스 로직
+// export const getTodoAction = async (id: string) => {
+//   console.log(id);
+//   const { token } = getAuth();
+//   try {
+//     const res = await fetch(`${VITE_API_URI}/todos/${id}`, {
+//       headers: token
+//         ? {
+//             Authorization: token,
+//             "Content-Type": "application/json",
+//           }
+//         : undefined,
+//     });
+//     if (!res.ok) {
+//       throw new Error("할 일을 불러오는데 실패했습니다.");
+//     }
+//     const { data } = await res.json();
+//     return { data, error: null };
+//   } catch (error) {
+//     console.error("getTodo error:", error);
+//     return { data: [], error: "할 일을 불러오는 중 오류가 발생했습니다." };
+//   }
+// };
+
+// get Todo Detail 비즈니스 로직
+export const getTodoDetail = async (selectedPost: TodoType) => {
   const { token } = getAuth();
-  try {
-    const res = await fetch(`${VITE_API_URI}/todos/${id}`, {
-      headers: token
-        ? {
-            Authorization: token,
-            "Content-Type": "application/json",
-          }
-        : undefined,
-    });
-    if (!res.ok) {
-      throw new Error("할 일을 불러오는데 실패했습니다.");
-    }
-    const { data } = await res.json();
-    return { data, error: null };
-  } catch (error) {
-    console.error("getTodo error:", error);
-    return { data: [], error: "할 일을 불러오는 중 오류가 발생했습니다." };
-  }
+  const res = await fetch(`${VITE_API_URI}/todos/${selectedPost.id}`, {
+    method: "GET",
+    headers: token
+      ? {
+          Authorization: token,
+          "Content-Type": "application/json",
+        }
+      : undefined,
+  });
+  const data = await res.json();
+  return data;
 };
+
 // create todo 비즈니스 로직
 export const createTodosAction = async ({ request }: { request: Request }) => {
   const { token } = getAuth();
@@ -141,18 +157,38 @@ export const createTodosAction = async ({ request }: { request: Request }) => {
     return { data: [], error: "할 일 생성에 오류가 발생했습니다." };
   }
 };
-
-export const getTodoDetail = async (selectedPost: TodoType) => {
+// delete todo 비즈니스 로직
+export const deleteTodoAction = async ({ request }: { request: Request }) => {
   const { token } = getAuth();
-  const res = await fetch(`${VITE_API_URI}/todos/${selectedPost.id}`, {
-    method: "GET",
-    headers: token
-      ? {
-          Authorization: token,
-          "Content-Type": "application/json",
-        }
-      : undefined,
-  });
-  const data = await res.json();
-  return data;
+  const formData = await request.formData();
+  const id = formData.get("todoId");
+
+  try {
+    const res = await fetch(`${VITE_API_URI}/todos/${id}`, {
+      method: "DELETE",
+      headers: token
+        ? {
+            Authorization: token,
+            "Content-Type": "application/json",
+          }
+        : undefined,
+    });
+    const data = await res.json();
+    if (!res.ok) {
+      return {
+        success: false,
+        error: data.message || "삭제 중 오류가 발생했습니다.",
+      };
+    }
+    return { success: true, data };
+  } catch (error) {
+    console.error("deleteTodo error:", error);
+    if (error instanceof Error) {
+      return { success: false, error: error.message };
+    }
+    return { success: false, error: "할 일 삭제 중 오류가 발생했습니다." };
+  }
+};
+export const updateTodoAction = async ({ request }: { request: Request }) => {
+  const { token } = getAuth();
 };

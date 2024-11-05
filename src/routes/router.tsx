@@ -3,6 +3,8 @@ import { Login, Regist } from "@/pages";
 import { createBrowserRouter, redirect } from "react-router-dom";
 import {
   createTodosAction,
+  deleteTodoAction,
+  updateTodoAction,
   getTodoListAction,
   loginAction,
   registAction,
@@ -21,12 +23,16 @@ const router = createBrowserRouter([
           return data;
         },
         action: async (args) => {
-          try {
-            const result = await createTodosAction(args);
-            return result;
-          } catch (error) {
-            console.error("Error in action:", error);
-            return { error: "Todo 생성 중 오류가 발생했습니다." };
+          const method = args.request.method;
+          switch (method) {
+            case "POST":
+              return await createTodosAction(args);
+            case "DELETE":
+              return await deleteTodoAction(args);
+            case "PATCH":
+              return await updateTodoAction(args);
+            default:
+              return { success: false, error: "지원하지 않는 메소드입니다." };
           }
         },
       },

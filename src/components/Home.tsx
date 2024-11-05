@@ -7,12 +7,14 @@ import {
   NoContent,
 } from "@/components";
 import { useEffect, useState } from "react";
-import { useActionData, useLoaderData } from "react-router-dom";
+import { useActionData, useLoaderData, useFetcher } from "react-router-dom";
 import { getTodoDetail } from "@/routes/actions";
 
 const Home = () => {
   const { data: todos } = useLoaderData() as { data: TodoType[] };
   const actionData = useActionData() as { success: boolean; data: TodoType[] };
+  const fetcher = useFetcher();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [editingPost, setEditingPost] = useState<TodoType | undefined>(
     undefined
@@ -42,9 +44,21 @@ const Home = () => {
     setIsModalOpen(true);
   };
 
-  const handleDelete = async (id: string) => {
-    // API 호출하여 게시글 삭제
-    console.log("Delete post:", id);
+  const handleDelete = async () => {
+    if (selectedPost) {
+      try {
+        fetcher.submit({ todoId: selectedPost.id }, { method: "DELETE" });
+        setSelectedPost(undefined);
+
+        // fetcher의 데이터로 에러 처리
+        if (fetcher.data?.error) {
+          alert(fetcher.data.error);
+        }
+      } catch (error) {
+        console.error("Delete failed:", error);
+        alert("삭제 중 오류가 발생했습니다.");
+      }
+    }
   };
 
   const handleSubmit = (
@@ -70,8 +84,9 @@ const Home = () => {
         const { data } = await getTodoDetail(selectedPost);
         setTodoDetail(data);
       })();
+    } else {
+      setTodoDetail(undefined);
     }
-    console.log(todoDetail);
   }, [selectedPost]);
 
   if (todos.length === 0) {

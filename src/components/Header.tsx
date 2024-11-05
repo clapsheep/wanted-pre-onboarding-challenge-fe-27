@@ -3,8 +3,6 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useNavigate } from "react-router-dom";
 
 function Header({ isLoggedIn }: { isLoggedIn: boolean }) {
-  console.log(isLoggedIn);
-
   const navigate = useNavigate();
   const { logout } = useAuth();
 

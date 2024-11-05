@@ -14,13 +14,7 @@ interface TodoListProps {
   selectedPostId?: string;
 }
 
-const TodoList = ({
-  todos,
-  onEdit,
-  onDelete,
-  onSelect,
-  selectedPostId,
-}: TodoListProps) => {
+const TodoList = ({ todos, onSelect, selectedPostId }: TodoListProps) => {
   return (
     <ul className="space-y-4">
       {todos.map((post) => (
