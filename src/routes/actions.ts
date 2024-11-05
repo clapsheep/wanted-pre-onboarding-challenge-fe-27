@@ -133,8 +133,6 @@ export const createTodosAction = async ({ request }: { request: Request }) => {
   const formData = await request.formData();
   const title = formData.get("title");
   const content = formData.get("content");
-  console.log(title, content);
-
   try {
     const res = await fetch(`${VITE_API_URI}/todos`, {
       method: "POST",
@@ -191,4 +189,29 @@ export const deleteTodoAction = async ({ request }: { request: Request }) => {
 };
 export const updateTodoAction = async ({ request }: { request: Request }) => {
   const { token } = getAuth();
+  const formData = await request.formData();
+  const title = formData.get("title");
+  const content = formData.get("content");
+  const todoId = formData.get("todoId");
+  try {
+    const res = await fetch(`${VITE_API_URI}/todos/${todoId}`, {
+      method: "PUT",
+      headers: token
+        ? {
+            Authorization: token,
+            "Content-Type": "application/json",
+          }
+        : undefined,
+      body: JSON.stringify({ title, content }),
+    });
+
+    if (!res.ok) {
+      throw new Error("할 일 수정에 실패했습니다.");
+    }
+    const data = await res.json();
+    return { success: true, data };
+  } catch (error) {
+    console.error("createTodos error:", error);
+    return { data: [], error: "할 일 수정에 오류가 발생했습니다." };
+  }
 };

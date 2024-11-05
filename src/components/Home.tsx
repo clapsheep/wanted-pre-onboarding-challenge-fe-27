@@ -10,9 +10,14 @@ import { useEffect, useState } from "react";
 import { useActionData, useLoaderData, useFetcher } from "react-router-dom";
 import { getTodoDetail } from "@/routes/actions";
 
+type ActionDataType = {
+  success: boolean;
+  data: TodoType | TodoType[];
+};
+
 const Home = () => {
   const { data: todos } = useLoaderData() as { data: TodoType[] };
-  const actionData = useActionData() as { success: boolean; data: TodoType[] };
+  const actionData = useActionData() as ActionDataType;
   const fetcher = useFetcher();
 
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -31,11 +36,7 @@ const Home = () => {
     }
   }, [actionData]);
 
-  const handleAdd = (
-    data: Omit<TodoType, "id" | "createdAt" | "updatedAt">
-  ) => {
-    // API 호출하여 새 게시글 TodoType
-    console.log("Add Todo:", data);
+  const handleAdd = () => {
     setIsModalOpen(false);
   };
 
@@ -49,7 +50,6 @@ const Home = () => {
       try {
         fetcher.submit({ todoId: selectedPost.id }, { method: "DELETE" });
         setSelectedPost(undefined);
-
         // fetcher의 데이터로 에러 처리
         if (fetcher.data?.error) {
           alert(fetcher.data.error);
@@ -61,14 +61,9 @@ const Home = () => {
     }
   };
 
-  const handleSubmit = (
-    data: Omit<TodoType, "id" | "createdAt" | "updatedAt">
-  ) => {
-    if (editingPost) {
-      // API 호출하여 게시글 수정
-      console.log("Edit post:", { ...data, id: editingPost.id });
-    } else {
-      handleAdd(data);
+  const handleSubmit = () => {
+    if (!editingPost) {
+      handleAdd();
     }
     setIsModalOpen(false);
     setEditingPost(undefined);
@@ -88,6 +83,15 @@ const Home = () => {
       setTodoDetail(undefined);
     }
   }, [selectedPost]);
+
+  useEffect(() => {
+    if (actionData?.data) {
+      // 배열인 경우 무시하거나 첫 번째 항목만 사용
+      if (!Array.isArray(actionData.data)) {
+        setTodoDetail(actionData.data);
+      }
+    }
+  }, [actionData]);
 
   if (todos.length === 0) {
     return (

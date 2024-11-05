@@ -29,7 +29,7 @@ const router = createBrowserRouter([
               return await createTodosAction(args);
             case "DELETE":
               return await deleteTodoAction(args);
-            case "PATCH":
+            case "PUT":
               return await updateTodoAction(args);
             default:
               return { success: false, error: "지원하지 않는 메소드입니다." };

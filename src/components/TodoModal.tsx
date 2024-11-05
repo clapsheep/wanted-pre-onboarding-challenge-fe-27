@@ -28,11 +28,16 @@ const TodoModal = ({ isOpen, onClose, initialData }: TodoModalProps) => {
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-      <Form method="post" className="bg-white p-6 rounded-lg w-96">
+      <Form
+        method={initialData ? "PUT" : "POST"}
+        className="bg-white p-6 rounded-lg w-96"
+      >
         <h2 className="text-xl font-bold mb-4">
           {initialData ? "게시글 수정" : "새 게시글 작성"}
         </h2>
-
+        {initialData && (
+          <input type="hidden" name="todoId" value={initialData.id} />
+        )}
         <InputText
           id="title"
           value={title}
